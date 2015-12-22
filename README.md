@@ -5,8 +5,8 @@
 
 جهت دریافت پروژه می توانید از دستور زیر در خط فرمان استفاده نمایید
 
-    git clone https://github.com/IRRN/LinkedList.git
+    git clone https://github.com/IRRN/DataStructure.git
 
 برای کسب اطلاعات بیشتر درمورد دریافت و اجرای کدها می توانید به ویکی پروژه به آدرس زیر مراجعه نمایید
-https://github.com/IRRN/LinkedList/wiki
+https://github.com/rezanazery/DataStructure/wiki
 

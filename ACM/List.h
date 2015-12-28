@@ -1,6 +1,5 @@
 #pragma once
-
-#include <iostream>
+#include <QDebug>
 
 using namespace std;
 
@@ -44,44 +43,56 @@ public:
     }
 
     void printMembers();
-    void printTeam();
+    void printData();
     int length() const;
     bool addFirst(const T &);
     bool addLast(const T &);
-    bool deleteFirst(T &);
-    bool deleteLast(T &);
+    bool deleteFirst();
+    bool deleteFirst(T &returnData);
+    bool deleteLast();
+    bool deleteLast(T &returnData);
+    bool deleteById(const int &teamNumber);
+    bool deleteById(T &returnData, const int &teamNumber);
+    bool searchById(Node<T> *returnNode, const int &teamNumber);
+    bool searchById(const int &teamNumber);
+    bool searchById_prev(Node<T> *returnNode, const int &teamNumber);
 };
 
 template<class T>
-void List<T>::printTeam() {
+void List<T>::printData() {
     if (!first) {
-        cout << "List is empty!\n";
+        qDebug() << "List is empty!";
         return;
     }
     auto *help = first;
     while (help) {
         const auto team = help->data;
-        cout << "Team Number: " << team.getTeamNumber() << endl;
-        cout << "Team Name: " << team.getTeamName() << endl;
-        cout << "Team Member Info: \n";
+        qDebug() << "Team Number: " << team.getTeamNumber() << endl;
+        qDebug() << "Team Name: " << team.getTeamName() << endl;
+        qDebug() << "Team Member Info: \n";
         team.getMembers()->printMembers();
-        cout << "University Name: " << team.getUniversityName() << endl;
-        cout << "Accepted Questions: " << team.getAcceptedQuestion() << endl;
-        cout << "Enter Time: " << team.getEnterTime() << endl;
-        cout << "Exit Time: " << team.getExitTime() << endl;
+        qDebug() << "University Name: " << team.getUniversityName() << endl;
+        qDebug() << "Accepted Questions: " << team.getAcceptedQuestion() << endl;
+        qDebug() << "Enter Time: " << team.getEnterTime() << endl;
+        qDebug() << "Exit Time: " << team.getExitTime() << endl;
         help = help->next;
     }
-    cout << endl;
+    qDebug() << endl;
 }
 
-template <class T>
+template<class T>
 void List<T>::printMembers() {
+    if (!first) {
+        qDebug() << "List is empty!";
+        return;
+    }
     auto *help = first;
     for (int i = 1; help; ++i) {
-        cout << "\tMember #" << i << " Name: " << help->data.getName() << endl;
-        cout << "\tMember #" << i << " Family: " << help->data.getFamily() << endl;
-        cout << "\tMember #" << i << " BirthDay: " << help->data.getBirthDay() << endl;
-        cout << "\tMember #" << i << " Gender: " << help->data.getGender() << "\n\n";
+        auto data = help->data;
+        qDebug() << "\tMember #" << i << " Name: " << data.getName() << endl;
+        qDebug() << "\tMember #" << i << " Family: " << data.getFamily() << endl;
+        qDebug() << "\tMember #" << i << " BirthDay: " << data.getBirthDay() << endl;
+        qDebug() << "\tMember #" << i << " Gender: " << data.getGender() << "\n\n";
 
         help = help->next;
     }
@@ -113,7 +124,7 @@ bool List<T>::addFirst(const T &x) {
         ++size;
         return true;
     }
-    cout << "can't create more than " << limit << endl;
+    qDebug() << "can't create more!" << limit << endl;
     return false;
 }
 
@@ -133,18 +144,17 @@ bool List<T>::addLast(const T &x) {
         ++size;
         return true;
     }
-    cout << "can't create more than " << limit << endl;
+    qDebug() << "can't create more!" << limit << endl;
     return false;
 }
 
 template<class T>
-bool List<T>::deleteFirst(T &x) {
+bool List<T>::deleteFirst() {
     if (!first) {
-        x = (T) NULL;
+        qDebug() << "List is empty!";
         return false;
     }
 
-    x = first->data;
     auto *help = first;
     first = first->next;
     delete help;
@@ -153,13 +163,28 @@ bool List<T>::deleteFirst(T &x) {
 }
 
 template<class T>
-bool List<T>::deleteLast(T &x) {
+bool List<T>::deleteFirst(T &returnData) {
     if (!first) {
-        x = (T) NULL;
+        qDebug() << "List is empty!";
+        returnData = (T) NULL;
+        return false;
+    }
+
+    returnData = first->data;
+    auto *help = first;
+    first = first->next;
+    delete help;
+    --size;
+    return true;
+}
+
+template<class T>
+bool List<T>::deleteLast() {
+    if (!first) {
+        qDebug() << "List is empty!";
         return false;
     }
     if (!first->next) {
-        x = first->data;
         delete first;
         first = nullptr;
         --size;
@@ -171,9 +196,145 @@ bool List<T>::deleteLast(T &x) {
         help = help->next;
     }
 
-    x = help->next->data;
     delete help->next;
     help->next = nullptr;
     --size;
     return true;
+}
+
+template<class T>
+bool List<T>::deleteLast(T &returnData) {
+    if (!first) {
+        qDebug() << "List is empty!";
+        returnData = (T) NULL;
+        return false;
+    }
+    if (!first->next) {
+        returnData = first->data;
+        delete first;
+        first = nullptr;
+        --size;
+        return true;
+    }
+
+    auto *help = first;
+    while (help->next->next) {
+        help = help->next;
+    }
+
+    returnData = help->next->data;
+    delete help->next;
+    help->next = nullptr;
+    --size;
+    return true;
+}
+
+template<class T>
+bool List<T>::deleteById(const int &teamNumber) {
+    if (!first) {
+        qDebug() << "List is empty!";
+        return false;
+    }
+
+    Node<T> *node = nullptr;
+    if (!searchById_prev(node, teamNumber)) {
+        qDebug() << "Can't find this team";
+        return false;
+    }
+
+    auto *help = node->next;
+    node->next = node->next->next;
+    delete help;
+    --size;
+
+    return true;
+}
+
+template<class T>
+bool List<T>::deleteById(T &returnData, const int &teamNumber) {
+    returnData = (T) NULL;
+
+    if (!first) {
+        qDebug() << "List is empty!";
+        return false;
+    }
+
+    Node<T> *node = nullptr;
+    if (!searchById_prev(node, teamNumber)) {
+        qDebug() << "Can't find this team";
+        return false;
+    }
+
+    returnData = node->data;
+    auto *help = node->next;
+    node->next = node->next->next;
+    delete help;
+    --size;
+
+    return true;
+}
+
+template<class T>
+bool List<T>::searchById(Node<T> *returnNode, const int &teamNumber) {
+    returnNode = nullptr;
+
+    if (!first) {
+        qDebug() << "List is empty!";
+        return false;
+    }
+
+    auto *help = first;
+    while (help) {
+        if (help->data.getTeamNumber() == teamNumber) {
+            returnNode = help;
+            return true;
+        }
+        help = help->next;
+    }
+
+    return false;
+}
+
+template<class T>
+bool List<T>::searchById(const int &teamNumber) {
+    if (!first) {
+        qDebug() << "List is empty!";
+        return false;
+    }
+
+    auto *help = first;
+    while (help) {
+        if (help->data.getTeamNumber() == teamNumber) {
+            return true;
+        }
+        help = help->next;
+    }
+
+    return false;
+}
+
+template<class T>
+bool List<T>::searchById_prev(Node<T> *returnNode, const int &teamNumber) {
+    returnNode = nullptr;
+
+    if (!first) {
+        qDebug() << "List is empty!";
+        return false;
+    }
+
+    if (first->data->getTeamNumber() == teamNumber) {
+        returnNode = first;
+        return true;
+    }
+
+    auto *help = first;
+    while (help->next) {
+        if (help->next->data.getTeamNumber() == teamNumber) {
+            returnNode = help;
+            return true;
+        }
+        help = help->next;
+    }
+
+    return false;
 }

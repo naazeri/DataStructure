@@ -1,7 +1,10 @@
 #include "team.h"
+#include <QDebug>
 
 Team::Team() {
-	teamMembers = nullptr;
+//	members = nullptr;
+	qDebug() << "Team class constractor called";
+	member_size = 0;
 }
 
 int Team::getTeamNumber() const {
@@ -12,8 +15,8 @@ QString Team::getTeamName() const {
 	return teamName;
 }
 
-List<Person>* Team::getMembers() const {
-	return teamMembers;
+Person Team::getMember(const int &i) const {
+	return members[i];
 }
 
 QString Team::getUniversityName() const {
@@ -32,7 +35,6 @@ QString Team::getExitTime() const {
 	return "";
 }
 
-
 void Team::setTeamNumber(const int &teamNumber) {
 	this->teamNumber = teamNumber;
 }
@@ -41,10 +43,14 @@ void Team::setTeamName(const QString &teamName) {
 	this->teamName = teamName;
 }
 
-void Team::setPerson(List<Person> *person) {
-	this->teamMembers = person;
+void Team::setMember(const Person &person, const int &i) {
+	if (i < 3) {
+		members[i] = person;
+		++member_size;
+	} else {
+		qDebug() << "Error, Invalid member index";
+	}
 }
-
 void Team::setUniversityName(const QString &uniName) {
 	this->universityName = uniName;
 }
@@ -53,12 +59,23 @@ void Team::setAcceptedQuestion(const int &i) {
 	this->acceptedQuestion = i;
 }
 
-void Team::setEnterTime(const long &i) {
-	this->enterTime = i;
+void Team::setEnterTime(const QString &h, const QString &m) {
+//	this->enterTime = i;
 }
 
-void Team::setExitTime(const long &i) {
-	this->exitTime = i;
+void Team::setExitTime(const QString &h, const QString &m) {
+//	this->exitTime = h;
+}
+
+void Team::printMembers() {
+	qDebug() << "I want to Print members... @@@";
+	for (int i = 0; i < member_size; ++i) {
+		qDebug() << QString("Member #%1:").arg(i+1);
+		qDebug() << "    Name" << members[i].getName();
+		qDebug() << "    Family" << members[i].getFamily();
+		qDebug() << "    BirthDay:" << members[i].getBirthDay();
+		qDebug() << "    Gender:" << members[i].getGender();
+	}
 }
 
 void Team::getData() {

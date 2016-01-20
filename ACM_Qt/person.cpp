@@ -8,11 +8,11 @@ void Person::setFamily(const QString &family) {
 	this->family = family;
 }
 
-void Person::setBirthDay(const int &y, const int &m, const int &d) {
-	birthDay = 13;
+void Person::setBirthDay(const QString&y, const QString&m, const QString&d) {
+	birthDay = 99;
 }
 
-void Person::setGender(const GENDER &gender) {
+void Person::setGender(const GENDER gender) {
 	this->gender = gender;
 }
 

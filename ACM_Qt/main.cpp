@@ -1,11 +1,19 @@
-#include "mainwindow.h"
 #include <QApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "database.h"
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
-	MainWindow w;
-	w.show();
+    QApplication app(argc, argv);
+    QQmlApplicationEngine engine;
 
-	return a.exec();
+	QQmlContext *root = engine.rootContext();
+	DataBase *db = new DataBase();
+	root->setContextProperty("dbClass", db);
+
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+    return app.exec();
 }

@@ -27,26 +27,16 @@ template<class T>
 class List {
 private:
 	Node<T> *first;
-	const int limit;
-	int size;
 
 public:
-	List() : limit(-1) {
-		first = nullptr;
-		size = 0;
-	}
-
-	List(const int &limit) : limit(limit) {
-		first = nullptr;
-		size = 0;
-	}
+	List() { first = nullptr; }
 
 	int length() const;
 
 	/*** Show ***/
 	T showByID(const int &teamNumber);
 	void showAllTeam();
-	void printMembers();
+//	void printMembers();
 
 	/*** Setter ***/
 	bool setNode(const int &teamNumber, const T &data);
@@ -54,6 +44,7 @@ public:
 
 	/*** Getter ***/
 	bool getNode(Node<T> *returnNode, const int &teamNumber);
+	bool get(T &returnData, const int &teamNumber);
 
 	/*** Add ***/
 	bool addFirst(const T &data);
@@ -74,6 +65,7 @@ public:
 
 	/*** Calculate ***/
 	bool calculateWinner(T &returnData);
+	bool getOlderPerson(T &returnData);
 };
 
 template<class T>
@@ -96,15 +88,15 @@ void List<T>::showAllTeam() {
 
 	auto *help = first;
 	while (help) {
-		const auto team = help->data;
+		auto team = help->data;
 		qDebug() << "Team Number: " << team.getTeamNumber();
 		qDebug() << "Team Name: " << team.getTeamName();
-		qDebug() << "Team Member Info:";
-		team.getMembers()->printMembers();
+        qDebug() << "Team Member Info:";
+		team.printMembers();
 		qDebug() << "University Name: " << team.getUniversityName();
 		qDebug() << "Accepted Questions: " << team.getAcceptedQuestion();
 		qDebug() << "Enter Time: " << team.getEnterTime();
-		qDebug() << "Exit Time: " << team.getExitTime() << "\n";
+		qDebug() << "Exit Time: " << team.getExitTime() << "\n\n";
 		help = help->next;
 	}
 }
@@ -125,7 +117,7 @@ T List<T>::showByID(const int &teamNumber) {
 	qDebug() << "Team Number: " << data.getTeamNumber();
 	qDebug() << "Team Name: " << data.getTeamName();
 	qDebug() << "Team Member Info:";
-	data.getMembers()->printMembers();
+	team.getMembers()->printMembers();
 	qDebug() << "University Name: " << data.getUniversityName();
 	qDebug() << "Accepted Questions: " << data.getAcceptedQuestion();
 	qDebug() << "Enter Time: " << data.getEnterTime();
@@ -135,23 +127,29 @@ T List<T>::showByID(const int &teamNumber) {
 	return data->data;
 }
 
-template<class T>
-void List<T>::printMembers() {
-	if (!first) {
-		qDebug() << "List is empty!";
-		return;
-	}
-	auto *help = first;
-	for (int i = 1; help; ++i) {
-		auto data = help->data;
-		qDebug() << "\tMember #" << i << " Name: " << data.getName() << endl;
-		qDebug() << "\tMember #" << i << " Family: " << data.getFamily() << endl;
-		qDebug() << "\tMember #" << i << " BirthDay: " << data.getBirthDay() << endl;
-		qDebug() << "\tMember #" << i << " Gender: " << data.getGender() << "\n\n";
+//template<class T>
+//void List<T>::printMembers() {
+//	qDebug() << "function call";
+//	qDebug() << "-1";
+//	if (!this->first) {
+//		qDebug() << "List is empty!";
+//		return;
+//	}
+//	qDebug() << "0";
+//	auto *help = first;
+//	qDebug() << "1";
+//	for (int i = 1; help; ++i) {
+//		qDebug() << "2";
+//		auto data = help->data;
+//		qDebug() << "3";
+//		qDebug() << "\tMember #" << i << " Name: " << data.getName() << endl;
+//		qDebug() << "\tMember #" << i << " Family: " << data.getFamily() << endl;
+//		qDebug() << "\tMember #" << i << " BirthDay: " << data.getBirthDay() << endl;
+//		qDebug() << "\tMember #" << i << " Gender: " << data.getGender() << "\n\n";
 
-		help = help->next;
-	}
-}
+//		help = help->next;
+//	}
+//}
 
 template<class T>
 bool List<T>::setNode(const int &teamNumber, const T &data) {
@@ -192,42 +190,38 @@ bool List<T>::getNode(Node<T> *returnNode, const int &teamNumber) {
 }
 
 template<class T>
-bool List<T>::addFirst(const T &x) {
-	if (size != limit) {
-		if (!first) {
-			first = new Node<T>(x);
-			++size;
-			return true;
-		}
+bool List<T>::get(T &returnData, const int &teamNumber) {
+	Node<T> *node;
+	const bool resualt = searchById(node, teamNumber);
+	returnData = node->data;
+	return resualt;
+}
 
-		auto temp = new Node<T>(x);
-		temp->next = first;
-		first = temp;
-		++size;
+template<class T>
+bool List<T>::addFirst(const T &x) {
+	if (!first) {
+		first = new Node<T>(x);
 		return true;
 	}
-	qDebug() << "can't create more!" << limit << endl;
-	return false;
+
+	auto temp = new Node<T>(x);
+	temp->next = first;
+	first = temp;
+	return true;
 }
 
 template<class T>
 bool List<T>::addLast(const T &x) {
-	if (size != limit) {
-		if (!first) {
-			first = new Node<T>(x);
-			++size;
-			return true;
-		}
-		auto *help = first;
-		while (help->next) {
-			help = help->next;
-		}
-		help->next = new Node<T>(x);
-		++size;
+	if (!first) {
+		first = new Node<T>(x);
 		return true;
 	}
-	qDebug() << "can't create more!" << limit << endl;
-	return false;
+	auto *help = first;
+	while (help->next) {
+		help = help->next;
+	}
+	help->next = new Node<T>(x);
+	return true;
 }
 
 template<class T>
@@ -240,7 +234,6 @@ bool List<T>::deleteFirst() {
 	auto *help = first;
 	first = first->next;
 	delete help;
-	--size;
 	return true;
 }
 
@@ -256,7 +249,6 @@ bool List<T>::deleteFirst(T &returnData) {
 	auto *help = first;
 	first = first->next;
 	delete help;
-	--size;
 	return true;
 }
 
@@ -269,7 +261,6 @@ bool List<T>::deleteLast() {
 	if (!first->next) {
 		delete first;
 		first = nullptr;
-		--size;
 		return true;
 	}
 
@@ -280,7 +271,6 @@ bool List<T>::deleteLast() {
 
 	delete help->next;
 	help->next = nullptr;
-	--size;
 	return true;
 }
 
@@ -295,7 +285,6 @@ bool List<T>::deleteLast(T &returnData) {
 		returnData = first->data;
 		delete first;
 		first = nullptr;
-		--size;
 		return true;
 	}
 
@@ -307,7 +296,6 @@ bool List<T>::deleteLast(T &returnData) {
 	returnData = help->next->data;
 	delete help->next;
 	help->next = nullptr;
-	--size;
 	return true;
 }
 
@@ -327,7 +315,6 @@ bool List<T>::deleteById(const int &teamNumber) {
 	auto *help = node->next;
 	node->next = node->next->next;
 	delete help;
-	--size;
 
 	return true;
 }
@@ -351,7 +338,6 @@ bool List<T>::deleteById(T &returnData, const int &teamNumber) {
 	auto *help = node->next;
 	node->next = node->next->next;
 	delete help;
-	--size;
 
 	return true;
 }
@@ -441,4 +427,26 @@ bool List<T>::calculateWinner(T &returnData) {
 	}
 
 	return topScore > 0;
+}
+
+template<class T>
+bool List<T>::getOlderPerson(T &returnData) {
+	returnData = (T) NULL;
+	if (!first) {
+		qDebug() << "List is empty!";
+		return false;
+	}
+
+	long maxAge = 0;
+	auto *help = first;
+	while (help) {
+		const auto age = help->data.getMembers()->getBirthDay();
+		if (age > maxAge) {
+			returnData = help->data;
+			maxAge = age;
+		}
+		help = help->next;
+	}
+
+	return maxAge > 0;
 }

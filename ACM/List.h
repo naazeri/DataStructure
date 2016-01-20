@@ -51,14 +51,14 @@ public:
     /*** Setter ***/
     bool setNode(const int &teamNumber, const T &data);
     bool setAcceptedQuestion(const int &teamNumber, const int &acceptedQuestion);
-    
+
     /*** Getter ***/
     bool getNode(Node<T> *returnNode, const int &teamNumber);
 
     /*** Add ***/
     bool addFirst(const T &data);
     bool addLast(const T &data);
-    
+
     /*** Delete ***/
     bool deleteFirst();
     bool deleteFirst(T &returnData);
@@ -71,9 +71,10 @@ public:
     bool searchById(const int &teamNumber);
     bool searchById(Node<T> *returnNode, const int &teamNumber);
     bool searchById_prev(Node<T> *returnNode, const int &teamNumber);
-    
+
     /*** Calculate ***/
     bool calculateWinner(T &returnData);
+    bool getOlderPerson(T &returnData);
 };
 
 template<class T>
@@ -117,7 +118,7 @@ T List<T>::showByID(const int &teamNumber) {
     }
 
     Node<T> *team = nullptr;
-    
+
     if (!searchById(team, teamNumber)) {
         return (T) NULL;
     }
@@ -441,4 +442,26 @@ bool List<T>::calculateWinner(T &returnData) {
     }
 
     return topScore > 0;
+}
+
+template<class T>
+bool List<T>::getOlderPerson(T &returnData) {
+    returnData = (T) NULL;
+    if (!first) {
+        qDebug() << "List is empty!";
+        return false;
+    }
+
+    long maxAge = 0;
+    auto *help = first;
+    while (help) {
+        const auto age = help->data.getMembers()->getBirthDay();
+        if (age > maxAge) {
+            returnData = help->data;
+            maxAge = age;
+        }
+        help = help->next;
+    }
+
+    return maxAge > 0;
 }

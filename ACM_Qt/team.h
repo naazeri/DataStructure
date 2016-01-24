@@ -25,6 +25,7 @@ public:
 	int getTeamNumber() const;
 	QString getTeamName() const;
 	Person getMember(const int &index) const;
+	int getMemberSize() const;
 	QString getUniversityName() const;
 	int getAcceptedQuestion() const;
 	QString getEnterTime() const;

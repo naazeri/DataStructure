@@ -24,8 +24,8 @@ QString Person::getFamily() const {
 	return family;
 }
 
-QString Person::getBirthDay() const {
-	return "birthDay";
+long Person::getBirthDay() const {
+	return birthDay;
 }
 
 QString Person::getGender() const {

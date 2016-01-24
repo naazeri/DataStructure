@@ -1,5 +1,6 @@
 #pragma once
 #include <QDebug>
+#include <QList>
 
 using namespace std;
 
@@ -64,8 +65,8 @@ public:
 	bool searchById_prev(Node<T> *returnNode, const int &teamNumber);
 
 	/*** Calculate ***/
-	bool calculateWinner(T &returnData);
-	bool getOlderPerson(T &returnData);
+	bool calculateWinner(QList<T> &returnData);
+	bool getOlderPerson(QList<T> &returnData);
 };
 
 template<class T>
@@ -408,8 +409,8 @@ bool List<T>::searchById_prev(Node<T> *returnNode, const int &teamNumber) {
 }
 
 template<class T>
-bool List<T>::calculateWinner(T &returnData) {
-	returnData = (T) NULL;
+bool List<T>::calculateWinner(QList<T> &returnData) {
+	returnData.clear();
 	if (!first) {
 		qDebug() << "List is empty!";
 		return false;
@@ -420,8 +421,12 @@ bool List<T>::calculateWinner(T &returnData) {
 	while (help) {
 		const auto score = help->data.getAcceptedQuestion();
 		if (score > topScore) {
-			returnData = help->data;
+//			returnData = help->data;
+			returnData.clear();
+			returnData.push_back(help->data);
 			topScore = score;
+		} else if (score == topScore) {
+			returnData.push_back(help->data);
 		}
 		help = help->next;
 	}
@@ -430,8 +435,8 @@ bool List<T>::calculateWinner(T &returnData) {
 }
 
 template<class T>
-bool List<T>::getOlderPerson(T &returnData) {
-	returnData = (T) NULL;
+bool List<T>::getOlderPerson(QList<T> &returnData) {
+	returnData.clear();
 	if (!first) {
 		qDebug() << "List is empty!";
 		return false;
@@ -440,10 +445,16 @@ bool List<T>::getOlderPerson(T &returnData) {
 	long maxAge = 0;
 	auto *help = first;
 	while (help) {
-		const auto age = help->data.getMembers()->getBirthDay();
-		if (age > maxAge) {
-			returnData = help->data;
-			maxAge = age;
+		const int memberSize = help->data.getMemberSize();
+		for (int i = 0; i < memberSize; ++i) {
+			const long age = help->data.getMembers(i).getBirthDay();
+			if (age > maxAge) {
+				returnData.clear();
+				returnData.push_back(help->data);
+				maxAge = age;
+			} else if (age == maxAge) {
+				returnData.push_back(help->data);
+			}
 		}
 		help = help->next;
 	}

@@ -19,6 +19,11 @@ Person Team::getMember(const int &i) const {
 	return members[i];
 }
 
+int Team::getMemberSize() const
+{
+	return member_size;
+}
+
 QString Team::getUniversityName() const {
 	return universityName;
 }

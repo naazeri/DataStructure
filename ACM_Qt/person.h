@@ -20,7 +20,7 @@ public:
 	/*** Get ***/
 	QString getName() const;
 	QString getFamily() const;
-	QString getBirthDay() const;
+	long getBirthDay() const;
 	QString getGender() const;
 
 	/*** Set ***/

@@ -32,12 +32,12 @@ int Team::getAcceptedQuestion() const {
 	return acceptedQuestion;
 }
 
-QString Team::getEnterTime() const {
-	return "";
+long Team::getEnterTime() const {
+	return enterTime;
 }
 
-QString Team::getExitTime() const {
-	return "";
+long Team::getExitTime() const {
+	return exitTime;
 }
 
 void Team::setTeamNumber(const int &teamNumber) {
@@ -49,6 +49,10 @@ void Team::setTeamName(const QString &teamName) {
 }
 
 void Team::setMember(const Person &person, const int &i) {
+	if (member_size >= 3) {
+		qDebug() << "Can't add more 3 member!";
+		return;
+	}
 	if (i < 3) {
 		members[i] = person;
 		++member_size;

@@ -28,8 +28,8 @@ public:
 	int getMemberSize() const;
 	QString getUniversityName() const;
 	int getAcceptedQuestion() const;
-	QString getEnterTime() const;
-	QString getExitTime() const;
+	long getEnterTime() const;
+	long getExitTime() const;
 
 	/*** Setters ***/
 	void setTeamNumber(const int&);

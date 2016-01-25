@@ -50,6 +50,8 @@ public:
     bool deleteOneBeforeLast(T &);
 
     bool deleteTwoBeforeLast(T &);
+
+    void quicksort();
 };
 
 template<class T>
@@ -228,19 +230,46 @@ bool List<T>::deleteTwoBeforeLast(T &x) {
     return true;
 }
 
+template<class T>
+void List<T>::quicksort() {
+    cout << "start sort\n";
+    if (!first) {
+        return;
+    }
+
+    for (Node<T> *i = first; i; i = i->next) {
+        for (Node<T> *j = first; j->next; j = j->next) {
+            if (j->data > j->next->data) {
+                Node<T> *temp = j;
+                j = j->next;
+                temp->next = j->next;
+                j->next = temp;
+
+                cout << "sweap\n";
+            }
+        }
+    }
+    cout << "end sort\n";
+}
+
 
 int main(void) {
     const int size = 10;
     List<int> list;
     list.print();
-    for (int i = 0; i < size; i++) {
+    for (int i = size; i > 0; i--) {
         list.addToLast(i+1);
-        list.print();
     }
-    int temp;
-    for (int i = 0; i < size+1; i++) {
-        list.deleteLast(temp);
-        list.print();
-    }
+    list.print();
+
+    list.quicksort();
+    list.print();
+
+//    int temp;
+//    for (int i = 0; i < size+1; i++) {
+//        list.deleteLast(temp);
+//        list.print();
+//    }
     return 0;
 }
+

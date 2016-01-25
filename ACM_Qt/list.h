@@ -46,6 +46,7 @@ public:
 	/*** Getter ***/
 	bool getNode(Node<T> *returnNode, const int &teamNumber);
 	bool get(T &returnData, const int &teamNumber);
+	bool getAll(QList<T> &returnData);
 
 	/*** Add ***/
 	bool addFirst(const T &data);
@@ -67,6 +68,10 @@ public:
 	/*** Calculate ***/
 	bool calculateWinner(QList<T> &returnData);
 	bool getOlderPerson(QList<T> &returnData);
+	bool calculateFirstExitTeam(QList<T> &returnData);
+
+	/*** Sort ***/
+	bool sortByAcceptedQuestion();
 };
 
 template<class T>
@@ -196,6 +201,22 @@ bool List<T>::get(T &returnData, const int &teamNumber) {
 	const bool resualt = searchById(node, teamNumber);
 	returnData = node->data;
 	return resualt;
+}
+
+template<class T>
+bool List<T>::getAll(QList<T> &returnData) {
+	returnData.clear();
+	if (!first) {
+		qDebug() << "List is empty!";
+		return false;
+	}
+
+	auto *help = first;
+	while (help) {
+		returnData.push_back(help->data);
+		help = help->next;
+	}
+	return returnData.size() > 0;
 }
 
 template<class T>
@@ -419,7 +440,7 @@ bool List<T>::calculateWinner(QList<T> &returnData) {
 	int topScore = 0;
 	auto *help = first;
 	while (help) {
-		const auto score = help->data.getAcceptedQuestion();
+		const int score = help->data.getAcceptedQuestion();
 		if (score > topScore) {
 //			returnData = help->data;
 			returnData.clear();
@@ -460,4 +481,49 @@ bool List<T>::getOlderPerson(QList<T> &returnData) {
 	}
 
 	return maxAge > 0;
+}
+
+template<class T>
+bool List<T>::calculateFirstExitTeam(QList<T> &returnData) {
+	returnData.clear();
+	if (!first) {
+		qDebug() << "List is empty!";
+		return false;
+	}
+
+	auto *help = first;
+	long minTime = first->data.getExitTime() - first->data.getEnterTime();
+	while (help) {
+		const long time = help->data.getExitTime() - help->data.getEnterTime();
+		if (time < minTime) {
+			returnData.clear();
+			returnData.push_back(help->data);
+			minTime = time;
+		} else if (time == minTime) {
+			returnData.push_back(help->data);
+		}
+		help = help->next;
+	}
+
+	return returnData.size() > 0;
+}
+
+template<class T>
+bool List<T>::sortByAcceptedQuestion() {
+	if (!first) {
+		qDebug() << "List is empty!";
+		return false;
+	}
+
+	for (Node *i = first; i; i = i->next) {
+		for (Node *j = i->next; j; j->next = j->next) {
+			if (i->data.getAcceptedQuestion() < j->data.getAcceptedQuestion()) {
+				Node *temp = i;
+				i = j;
+				j = temp;
+			}
+		}
+	}
+
+	return true;
 }

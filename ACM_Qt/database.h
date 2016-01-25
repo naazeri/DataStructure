@@ -46,6 +46,7 @@ signals:
 public slots:
 	void changeTeamNumber();
 	void changeTeamName();
+	void sortList();
 
 private:
 	List<Team> *list;

@@ -177,5 +177,16 @@ void DataBase::changeTeamName() {
 //	list->get(team, 1);
 //	QStringList l;
 //	l.append(team.getTeamName());
-//	setTeamName(l);
+	//	setTeamName(l);
+}
+
+void DataBase::sortList()
+{
+	qDebug() << "Before Sort:";
+	list->showAllTeam();
+
+
+
+	qDebug() << "Before Sort:";
+	list->showAllTeam();
 }

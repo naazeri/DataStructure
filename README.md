@@ -1,12 +1,5 @@
-# LinkedList
-کد تمرین های ساختمان داده استاد غدیرزاده
+My exercises for Data Structure lesson in Sadjad university
 
-توجه: این کدها در سیستم عامل گنو لینوکس و با کامپایلر جی سی سی نوشته شده اند. لذا ممکن است  دوستانی که کدها را در ویژوال استودیو اجرا می کنند با خطا مواجه شوند
-
-جهت دریافت پروژه می توانید از دستور زیر در خط فرمان استفاده نمایید
-
-    git clone https://github.com/rezanazery/DataStructure.git
-
-برای کسب اطلاعات بیشتر درمورد دریافت و اجرای کدها می توانید به ویکی پروژه به آدرس زیر مراجعه نمایید
-https://github.com/rezanazery/DataStructure/wiki
+## Wiki:
+https://github.com/naazeri/DataStructure/wiki
 
